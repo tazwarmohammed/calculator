@@ -1,0 +1,39 @@
+html, body {
+  height: 100%;
+}
+
+html {
+  display: table;
+  margin: auto;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 1px;
+}
+
+button {
+  width: 80px;
+  height: 80px;
+  font-size: xx-large;
+}
+
+.display {
+  border: 1px solid black;
+  border-radius: 2px;
+  grid-column: 1 / -2;
+  height: 40px;
+  text-align: end;
+  font-size: xx-large;
+  padding: 19px;
+  padding-right: 5px;
+}
