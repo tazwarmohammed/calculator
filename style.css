@@ -9,14 +9,14 @@ html {
   margin: auto;
 }
 
-.container {
+body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-.grid {
+.grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
@@ -36,7 +36,7 @@ button {
   background-color: rgb(166, 225, 255);
   border: 1px solid black;
   /* border-radius: 2px; */
-  grid-column: 1 / -2;
+  grid-column: 1 / -1;
   height: 40px;
   text-align: end;
   font-size: xx-large;
