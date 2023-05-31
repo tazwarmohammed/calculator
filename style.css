@@ -28,14 +28,12 @@ button {
   height: 100px;
   font-size: xx-large;
   background-color: rgb(236, 203, 229);
-  /* background-color: rgb(247, 142, 224); */
   border: 1px solid black;
 }
 
 #display {
   background-color: rgb(166, 225, 255);
   border: 1px solid black;
-  /* border-radius: 2px; */
   grid-column: 1 / -1;
   height: 40px;
   text-align: end;
@@ -43,4 +41,8 @@ button {
   padding: 29px;
   padding-right: 5px;
   padding-left: 5px;
+}
+
+.clicked {
+  background-color: rgb(247, 142, 224);
 }

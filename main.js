@@ -1,10 +1,17 @@
+"use strict";
+
 const display = document.querySelector('#display');
+
+const operators = document.querySelectorAll('.op');
 
 // const operators = ['+', '-', '×', '÷'];
 
-let number1, number2, operator;
+let  number1, number2, operator;
 
-let equalTo = false;
+let  operatorCount = 0;
+
+let opActive = false;   //true if any operator or equal button is pressed
+
 
 function add(num1, num2) {
     return num1 + num2;
@@ -34,44 +41,76 @@ function operate(num1, num2, operator) {
     }
 }
 
+//remove everything from display
+function allClear() {                
+    number1, number2 = 0;
+    operator, display.innerText = '';
+    opActive = false;
+    operatorCount = 0;
+}
+
+
+//all buttons
 document.querySelectorAll('button').forEach((button) => {
-    button.addEventListener('click', (e) => {
-        e.target.style.cssText = `background-color: rgb(247, 142, 224);`;
-        setTimeout(function() {
-            e.target.style.backgroundColor = "rgb(236, 203, 229)";
+    button.addEventListener('click', () => {
+        button.classList.add('clicked');
+        setTimeout(() => {
+            button.classList.remove('clicked');
         }, 50);
+        clearAllOperatorColor();
     });
 });
 
-function displayResult() {
-    
+
+//remove color of operators
+function clearAllOperatorColor() {        
+    operators.forEach((op) => {
+        op.classList.remove('clicked');
+    });
 }
 
-function allClear() {
-    display.innerText = '';
-}
 
+//AC button
 document.querySelector('#all-clear').addEventListener('click', allClear);
 
+
+//number buttons
 document.querySelectorAll('.num').forEach((number) => {
     number.addEventListener('click', (e) => {
         if(display.innerText.length<24) {
+            if(opActive) {
+                display.innerText = '';
+                opActive = false;
+            }
             display.innerText += e.target.innerText;
         }
     });
 });
 
-document.querySelectorAll('.op').forEach((op) => {
+
+//operator buttons
+operators.forEach((op) => {
     op.addEventListener('click', (e) => {
-        // e.target.style.cssText = `background-color: rgb(247, 142, 224);`
+        clearAllOperatorColor();
+        opActive = true;
+        setTimeout(() => {
+            op.classList.add('clicked');
+        }, 50);
+        op.classList.add('clicked');
+        if(operatorCount > 0) {
+            number2 = Number(display.innerText);
+            display.innerText = operate(number1, number2, operator);
+        }  
         number1 = Number(display.innerText);
         operator = e.target.innerText;
+        operatorCount++;
     })
 });
 
 
-document.querySelector('#equal').addEventListener('click', (e) => {
-    equalTo = true;
+//equal button
+document.querySelector('#equal').addEventListener('click', () => {
     number2 = Number(display.innerText);
     display.innerText = operate(number1, number2, operator);
+    opActive = true;
 });
