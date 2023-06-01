@@ -6,11 +6,13 @@ const operators = document.querySelectorAll('.op');
 
 // const operators = ['+', '-', '×', '÷'];
 
-let  number1, number2, operator, result;
-
-let  operatorCount = 0;
-
-let opActive, equalTo = false;   //true if any operator or equal button is pressed
+let number1; 
+let number2; 
+let operator;
+let result;
+let operatorCount = 0;
+let opActive = false;   //true if any operator is pressed
+let equalTo = false;   //true if equal button is pressed
 
 
 function add(num1, num2) {
@@ -47,28 +49,28 @@ function allClear() {
     number1 = undefined
     number2 = undefined;
     operator, display.innerText = '';
-    opActive, equalTo, isDecimal = false;
+    opActive, equalTo = false;
     operatorCount = 0;
 }
-
-//all buttons
-document.querySelectorAll('button').forEach((button) => {
-    button.addEventListener('click', () => {
-        button.classList.add('clicked');
-        setTimeout(() => {
-            button.classList.remove('clicked');
-        }, 50);
-        clearAllOperatorColor();
-    });
-});
-
 
 //remove color of operators
 function clearAllOperatorColor() {        
     operators.forEach((op) => {
-        op.classList.remove('clicked');
+        op.style.removeProperty("background-color");
     });
 }
+
+
+//all buttons
+document.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', () => {
+        button.style.cssText = `background-color: white`;
+        setTimeout(() => {
+            button.style.removeProperty("background-color");
+        }, 50);
+        clearAllOperatorColor();
+    });
+});
 
 
 //AC button
@@ -96,9 +98,9 @@ operators.forEach((op) => {
         clearAllOperatorColor();
         opActive = true;
         setTimeout(() => {
-            op.classList.add('clicked');
+            op.style.cssText = `background-color: white`;
         }, 50);
-        op.classList.add('clicked');
+        // op.classList.add('clicked');
         if(operatorCount > 0) {
             number2 = Number(display.innerText);
             display.innerText = operate(number1, number2, operator);
@@ -116,7 +118,8 @@ document.querySelector('#equal').addEventListener('click', () => {
         operatorCount = 0;
         number2 = Number(display.innerText);
         display.innerText = operate(number1, number2, operator);
-        opActive, equalTo = true;
+        opActive = true; 
+        equalTo = true;
     }
 });
 
@@ -141,5 +144,7 @@ document.querySelector('#plus-minus').addEventListener('click', () => {
 
 //dot(decimal) button
 document.querySelector('#decimal').addEventListener('click', () => {
-
+    if(!display.innerText.includes('.')) {
+        display.innerText += '.'
+    }
 });

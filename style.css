@@ -21,14 +21,19 @@ body {
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
   gap: 1px;
+  padding: 10px;
+  background-color: black;
+  border-radius: 10px;
+  max-height: 505px;
 }
 
 button {
   width: 100px;
-  height: 100px;
+  height: 80px;
   font-size: xx-large;
-  background-color: rgb(236, 203, 229);
+  /* background-color: rgb(236, 203, 229); */
   border: 1px solid black;
+  border-radius: 5px;
 }
 
 #display {
@@ -43,6 +48,34 @@ button {
   padding-left: 5px;
 }
 
-.clicked {
-  background-color: rgb(247, 142, 224);
+.num {
+  background-color: orange;
+}
+
+.op {
+  background-color: greenyellow;
+}
+
+#display-on-off {
+  background-color: rgba(255, 0, 0, 0.76);
+}
+
+#all-clear {
+  background-color: rgb(106, 106, 255);
+}
+
+#clear {
+  background-color: rgb(106, 106, 255);
+}
+
+#decimal {
+  background-color: orange;
+}
+
+#equal {
+  background-color: rgb(1, 182, 1);
+}
+
+#plus-minus {
+  background-color: greenyellow;
 }
