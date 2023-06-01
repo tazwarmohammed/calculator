@@ -9,6 +9,7 @@ const allButtons = document.querySelectorAll('button');
 let number1; 
 let number2; 
 let operator;
+let result;
 let operatorCount = 0;
 let opActive = false;   //true if any operator is pressed
 let equalTo = false;   //true if equal button is pressed
@@ -27,7 +28,6 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-    if(num2 === 0) return 'Math Error';
     return num1 / num2;
 }
 
@@ -59,6 +59,16 @@ function clearAllOperatorColor() {
     });
 }
 
+function displayResult() {
+    result = operate(number1, number2, operator);
+    if(result === NaN || result === Infinity) {
+        display.innerText = 'Math Error';
+    } else {
+        number2 = Number(display.innerText);
+        display.innerText = operate(number1, number2, operator);
+    }
+}
+
 function disableButtons() {
     allButtons.forEach((button) => {
         if(!(button.innerText === 'ON')) {
@@ -76,7 +86,7 @@ function enableButtons() {
 }
 
 //on-off button
-document.querySelector('#display-on-off').addEventListener('click', (e) => {
+document.querySelector('#on-off').addEventListener('click', (e) => {
     if(e.target.innerText === 'OFF') {
         allClear();
         e.target.innerText = 'ON';
@@ -130,12 +140,10 @@ operators.forEach((op) => {
         opActive = true;
         setTimeout(() => {
             op.style.cssText = `background-color: white`;
-        }, 50);
-        // op.classList.add('clicked');
+        }, 10);
         if(operatorCount > 0) {
-            number2 = Number(display.innerText);
-            display.innerText = operate(number1, number2, operator);
-        }  
+            displayResult();
+        }
         number1 = Number(display.innerText);
         operator = e.target.innerText;
         operatorCount++;
@@ -147,8 +155,7 @@ operators.forEach((op) => {
 document.querySelector('#equal').addEventListener('click', () => {
     if(!equalTo) {
         operatorCount = 0;
-        number2 = Number(display.innerText);
-        display.innerText = operate(number1, number2, operator);
+        displayResult();
         opActive = true; 
         equalTo = true;
     }
@@ -179,3 +186,8 @@ document.querySelector('#decimal').addEventListener('click', () => {
         display.innerText += '.'
     }
 });
+
+
+// window.addEventListener('keydown', (e) => {
+//     console.log(e.key);
+// });
