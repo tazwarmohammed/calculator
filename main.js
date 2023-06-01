@@ -6,11 +6,11 @@ const operators = document.querySelectorAll('.op');
 
 // const operators = ['+', '-', '×', '÷'];
 
-let  number1, number2, operator;
+let  number1, number2, operator, result;
 
 let  operatorCount = 0;
 
-let opActive = false;   //true if any operator or equal button is pressed
+let opActive, equalTo = false;   //true if any operator or equal button is pressed
 
 
 function add(num1, num2) {
@@ -26,6 +26,7 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if(num2 === 0) return 'Math Error';
     return num1 / num2;
 }
 
@@ -43,15 +44,11 @@ function operate(num1, num2, operator) {
 
 //remove everything from display
 function allClear() {                
-    number1, number2 = 0;
+    number1 = undefined
+    number2 = undefined;
     operator, display.innerText = '';
-    opActive = false;
+    opActive, equalTo, isDecimal = false;
     operatorCount = 0;
-}
-
-//check if result is infinity
-function isInfinity() {
-    
 }
 
 //all buttons
@@ -87,6 +84,7 @@ document.querySelectorAll('.num').forEach((number) => {
                 opActive = false;
             }
             display.innerText += e.target.innerText;
+            equalTo = false;
         }
     });
 });
@@ -114,14 +112,34 @@ operators.forEach((op) => {
 
 //equal button
 document.querySelector('#equal').addEventListener('click', () => {
-    operatorCount = 0;
-    number2 = Number(display.innerText);
-    display.innerText = operate(number1, number2, operator);
-    opActive = true;
+    if(!equalTo) {
+        operatorCount = 0;
+        number2 = Number(display.innerText);
+        display.innerText = operate(number1, number2, operator);
+        opActive, equalTo = true;
+    }
 });
 
 
 //clear button
 document.querySelector('#clear').addEventListener('click', () => {
-    
+    display.textContent = display.textContent.slice(0, -1);
+});
+
+
+//plus-minus button
+document.querySelector('#plus-minus').addEventListener('click', () => {
+    if(Number(display.innerText) === 0) {
+        return;
+    } else if(Number(display.innerText) > 0) {
+        display.innerText = '-' + display.innerText;
+    } else {
+        display.innerText = display.innerText.slice(1);
+    }
+});
+
+
+//dot(decimal) button
+document.querySelector('#decimal').addEventListener('click', () => {
+
 });
