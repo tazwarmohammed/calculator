@@ -49,6 +49,10 @@ function allClear() {
     operatorCount = 0;
 }
 
+//check if result is infinity
+function isInfinity() {
+    
+}
 
 //all buttons
 document.querySelectorAll('button').forEach((button) => {
@@ -110,7 +114,14 @@ operators.forEach((op) => {
 
 //equal button
 document.querySelector('#equal').addEventListener('click', () => {
+    operatorCount = 0;
     number2 = Number(display.innerText);
     display.innerText = operate(number1, number2, operator);
     opActive = true;
+});
+
+
+//clear button
+document.querySelector('#clear').addEventListener('click', () => {
+    
 });
