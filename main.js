@@ -4,12 +4,11 @@ const display = document.querySelector('#display');
 
 const operators = document.querySelectorAll('.op');
 
-// const operators = ['+', '-', '×', '÷'];
+const allButtons = document.querySelectorAll('button');
 
 let number1; 
 let number2; 
 let operator;
-let result;
 let operatorCount = 0;
 let opActive = false;   //true if any operator is pressed
 let equalTo = false;   //true if equal button is pressed
@@ -60,14 +59,46 @@ function clearAllOperatorColor() {
     });
 }
 
+function disableButtons() {
+    allButtons.forEach((button) => {
+        if(!(button.innerText === 'ON')) {
+            button.disabled = true;
+        }
+    });
+}
+
+function enableButtons() {
+    allButtons.forEach((button) => {
+        if(!(button.innerText === 'OFF')) {
+            button.disabled = false;
+        }
+    });
+}
+
+//on-off button
+document.querySelector('#display-on-off').addEventListener('click', (e) => {
+    if(e.target.innerText === 'OFF') {
+        allClear();
+        e.target.innerText = 'ON';
+        display.innerText = 'Calculator off!';
+        disableButtons();
+
+    } else {
+        e.target.innerText = 'OFF';
+        display.innerText = '';
+        enableButtons();
+    }
+});
+
 
 //all buttons
-document.querySelectorAll('button').forEach((button) => {
+allButtons.forEach((button) => {
+    button.disabled = false;
     button.addEventListener('click', () => {
         button.style.cssText = `background-color: white`;
         setTimeout(() => {
             button.style.removeProperty("background-color");
-        }, 50);
+        }, 10);
         clearAllOperatorColor();
     });
 });
@@ -80,7 +111,7 @@ document.querySelector('#all-clear').addEventListener('click', allClear);
 //number buttons
 document.querySelectorAll('.num').forEach((number) => {
     number.addEventListener('click', (e) => {
-        if(display.innerText.length<24) {
+        if(display.innerText.length<12) {
             if(opActive) {
                 display.innerText = '';
                 opActive = false;
@@ -136,7 +167,7 @@ document.querySelector('#plus-minus').addEventListener('click', () => {
         return;
     } else if(Number(display.innerText) > 0) {
         display.innerText = '-' + display.innerText;
-    } else {
+    } else if(Number(display.innerText) < 0) {
         display.innerText = display.innerText.slice(1);
     }
 });
