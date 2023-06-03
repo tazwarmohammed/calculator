@@ -2,17 +2,37 @@
 
 const display = document.querySelector('#display');
 
-const operators = document.querySelectorAll('.op');
+const operatorDom = document.querySelectorAll('.op');
 
-const allButtons = document.querySelectorAll('button');
+const allButtonDom = document.querySelectorAll('button');
+
+const domIds = {
+    '+': 'add',
+    '-' : 'subtract',
+    '*' : 'multiply',
+    '/' : 'divide',
+    'Backspace' : 'clear',
+    '.' : 'decimal',
+    'Enter' : 'equal',
+    '0' : 'zero',
+    '1' : 'one',
+    '2' : 'two',
+    '3' : 'three',
+    '4' : 'four',
+    '5' : 'five',
+    '6' : 'six',
+    '7' : 'seven',
+    '8' : 'eight',
+    '9' : 'nine'
+};
 
 let number1; 
 let number2; 
 let operator;
-let result;
+// let result;
 let operatorCount = 0;
-let opActive = false;   //true if any operator is pressed
-let equalTo = false;   //true if equal button is pressed
+let isOperator = false;   //true if any operator is pressed
+let isEqual = false;   //true if equal button is pressed
 
 
 function add(num1, num2) {
@@ -48,29 +68,36 @@ function allClear() {
     number1 = undefined
     number2 = undefined;
     operator, display.innerText = '';
-    opActive, equalTo = false;
+    isOperator, isEqual = false;
     operatorCount = 0;
 }
 
 //remove color of operators
 function clearAllOperatorColor() {        
-    operators.forEach((op) => {
+    operatorDom.forEach((op) => {
         op.style.removeProperty("background-color");
     });
 }
 
 function displayResult() {
-    result = operate(number1, number2, operator);
-    if(result === NaN || result === Infinity) {
+    let result = operate(number1, number2, operator);
+    if(result == NaN || result == Infinity || result == undefined) {
         display.innerText = 'Math Error';
     } else {
         number2 = Number(display.innerText);
-        display.innerText = operate(number1, number2, operator);
+        result = operate(number1, number2, operator);
+        if(result.toString().length > 11) {
+            display.innerText = result.toPrecision(11);
+        } else {
+            display.innerText = result;
+        }
     }
+    console.log(result);
+    console.log(result.toString().length);
 }
 
 function disableButtons() {
-    allButtons.forEach((button) => {
+    allButtonDom.forEach((button) => {
         if(!(button.innerText === 'ON')) {
             button.disabled = true;
         }
@@ -78,12 +105,86 @@ function disableButtons() {
 }
 
 function enableButtons() {
-    allButtons.forEach((button) => {
+    allButtonDom.forEach((button) => {
         if(!(button.innerText === 'OFF')) {
             button.disabled = false;
         }
     });
 }
+
+function buttonAction(e, isClick) {
+    if(isClick) {
+        const currentButton = e.target;
+        currentButton.style.cssText = `background-color: white`;
+        setTimeout(() => {
+            currentButton.style.removeProperty("background-color");
+        }, 10);
+    } else {
+        const currentButton = document.getElementById(domIds[e.key]);
+        currentButton.style.cssText = `background-color: white`;
+        setTimeout(() => {
+            currentButton.style.removeProperty("background-color");
+        }, 10);
+    }
+    clearAllOperatorColor();
+}
+
+function numberInput(e, isClick) {
+    if(display.innerText.length<12) {
+        if(isOperator) {
+            display.innerText = '';
+            isOperator = false;
+        }
+        if(isClick) {
+            display.innerText += e.target.innerText;
+        } else {
+            display.innerText += e.key;
+        }
+        isEqual = false;
+    }
+}
+
+function operatorInput(e, isClick) {
+    isOperator = true;
+    if(operatorCount > 0) {
+        displayResult();
+    }
+    number1 = Number(display.innerText);
+    if(isClick) {
+        operator = e.target.innerText;
+        setTimeout(() => {
+            e.target.style.cssText = `background-color: white`;
+        }, 10);
+    } else {
+        operator = e.key;
+        setTimeout(() => {
+            document.getElementById(domIds[e.key]).style.cssText = `background-color: white`;
+        }, 10);
+    }
+    operatorCount++;
+}
+
+function equalAction() {
+    if(!isEqual) {
+        operatorCount = 0;
+        displayResult();
+        isOperator = true; 
+        isEqual = true;
+    }
+}
+
+function clearAction() {
+    if(!(display.textContent === 'Math Error' || display.textContent === 'NaN')) {
+        display.textContent = display.textContent.slice(0, -1);
+    }
+}
+
+function decimalInput() {
+    if(!display.innerText.includes('.')) {
+        display.innerText += '.';
+    }
+}
+
 
 //on-off button
 document.querySelector('#on-off').addEventListener('click', (e) => {
@@ -102,14 +203,9 @@ document.querySelector('#on-off').addEventListener('click', (e) => {
 
 
 //all buttons
-allButtons.forEach((button) => {
-    button.disabled = false;
-    button.addEventListener('click', () => {
-        button.style.cssText = `background-color: white`;
-        setTimeout(() => {
-            button.style.removeProperty("background-color");
-        }, 10);
-        clearAllOperatorColor();
+allButtonDom.forEach((button) => {
+    button.addEventListener('click', (e) => {
+        buttonAction(e, true);
     });
 });
 
@@ -121,51 +217,25 @@ document.querySelector('#all-clear').addEventListener('click', allClear);
 //number buttons
 document.querySelectorAll('.num').forEach((number) => {
     number.addEventListener('click', (e) => {
-        if(display.innerText.length<12) {
-            if(opActive) {
-                display.innerText = '';
-                opActive = false;
-            }
-            display.innerText += e.target.innerText;
-            equalTo = false;
-        }
+        numberInput(e, true);
     });
 });
 
 
 //operator buttons
-operators.forEach((op) => {
+operatorDom.forEach((op) => {
     op.addEventListener('click', (e) => {
-        clearAllOperatorColor();
-        opActive = true;
-        setTimeout(() => {
-            op.style.cssText = `background-color: white`;
-        }, 10);
-        if(operatorCount > 0) {
-            displayResult();
-        }
-        number1 = Number(display.innerText);
-        operator = e.target.innerText;
-        operatorCount++;
-    })
+        operatorInput(e, op, true);
+    });
 });
 
 
 //equal button
-document.querySelector('#equal').addEventListener('click', () => {
-    if(!equalTo) {
-        operatorCount = 0;
-        displayResult();
-        opActive = true; 
-        equalTo = true;
-    }
-});
+document.querySelector('#equal').addEventListener('click', equalAction);
 
 
 //clear button
-document.querySelector('#clear').addEventListener('click', () => {
-    display.textContent = display.textContent.slice(0, -1);
-});
+document.querySelector('#clear').addEventListener('click', clearAction);
 
 
 //plus-minus button
@@ -181,13 +251,26 @@ document.querySelector('#plus-minus').addEventListener('click', () => {
 
 
 //dot(decimal) button
-document.querySelector('#decimal').addEventListener('click', () => {
-    if(!display.innerText.includes('.')) {
-        display.innerText += '.'
+document.querySelector('#decimal').addEventListener('click', decimalInput);
+
+
+//keyboard support
+document.addEventListener(('keydown'), (e) => {
+    // console.log(e.key);
+
+    if(e.key in domIds) {
+        buttonAction(e, false);
+    }
+
+    if(e.key === '.') {
+        decimalInput();
+    } else if(e.key>=0 && e.key<=9) {
+        numberInput(e, false);
+    } else if(e.key === 'Enter') {
+        equalAction();
+    } else if(e.key === 'Backspace') {
+        clearAction();
+    } else if(e.key in domIds) {
+        operatorInput(e, false);
     }
 });
-
-
-// window.addEventListener('keydown', (e) => {
-//     console.log(e.key);
-// });
