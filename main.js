@@ -55,9 +55,9 @@ function operate(num1, num2, operator) {
         return add(num1, num2);
     } else if(operator == '-') {
         return subtract(num1, num2);
-    } else if(operator == '×' || operator == '*') {
+    } else if(operator == '×') {
         return multiply(num1, num2);
-    } else if(operator == '÷' || operator == '/') {
+    } else if(operator == '÷') {
         return divide(num1, num2);
     }
 }
@@ -81,20 +81,31 @@ function clearAllOperatorColor() {
 }
 
 function displayResult() {
+    number2 = Number(display.innerText);
     let result = operate(number1, number2, operator);
-    // console.log(result);
-    // console.log(typeof result);
-    if(isNaN(result) || result === Infinity || result === undefined) {
+    if(result === Infinity) {
         display.innerText = 'Math Error';
     } else {
-        number2 = Number(display.innerText);
         result = operate(number1, number2, operator);
-        // console.log(result);
-        if(result.toString().length > 11) {
-            display.innerText = result.toPrecision(11);
+        console.log(result);
+        if(result.toString().length > 12  && (result < 1 && result > -1)) {
+            display.innerText = result.toPrecision(6);
+        } else if(result.toString().includes('e')) {
+            display.innerText = result.toPrecision(8);
         } else {
             display.innerText = result;
         }
+    }
+}
+
+function resultLength(e, length, isClick) {
+    if(display.innerText.length <= length) {
+        if(isClick) {
+            display.innerText += e.target.innerText;
+        } else {
+            display.innerText += e.key;
+        }
+        isEqual = false;
     }
 }
 
@@ -138,38 +149,35 @@ function numberInput(e, isClick) {
         isOperator = false;
     }
 
-    if(display.innerText.length<12) {
-        if(isClick) {
-            display.innerText += e.target.innerText;
-        } else {
-            display.innerText += e.key;
-        }
-        isEqual = false;
-    }
+    resultLength(e, 12, isClick);
 }
 
 function operatorInput(e, isClick) {
-    isOperator = true;
-    if(operatorCount > 0) {
-        displayResult();
+    if(display.innerText !== '') {
+        isOperator = true;
+        if(operatorCount > 0) {
+            displayResult();
+        }
+        number1 = Number(display.innerText);
+        display.innerText = '';
+        if(isClick) {
+            operator = e.target.innerText;
+            setTimeout(() => {
+                e.target.style.cssText = `background-color: white`;
+            }, 10);
+        } else {
+            const operatorDom = document.getElementById(domIds[e.key])
+            operator = operatorDom.innerText;
+            setTimeout(() => {
+                operatorDom.style.cssText = `background-color: white`;
+            }, 10);
+        }
+        operatorCount++;
     }
-    number1 = Number(display.innerText);
-    if(isClick) {
-        operator = e.target.innerText;
-        setTimeout(() => {
-            e.target.style.cssText = `background-color: white`;
-        }, 10);
-    } else {
-        operator = e.key;
-        setTimeout(() => {
-            document.getElementById(domIds[e.key]).style.cssText = `background-color: white`;
-        }, 10);
-    }
-    operatorCount++;
 }
 
 function equalAction() {
-    if(!isEqual) {
+    if(!isEqual && display.innerText !== '') {
         operatorCount = 0;
         displayResult();
         isOperator = true;
