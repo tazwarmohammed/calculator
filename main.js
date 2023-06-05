@@ -87,14 +87,7 @@ function displayResult() {
         display.innerText = 'Math Error';
     } else {
         result = operate(number1, number2, operator);
-        console.log(result);
-        if(result.toString().length > 12  && (result < 1 && result > -1)) {
-            display.innerText = result.toPrecision(6);
-        } else if(result.toString().includes('e')) {
-            display.innerText = result.toPrecision(8);
-        } else {
-            display.innerText = result;
-        }
+        display.innerText = result;
     }
 }
 
