@@ -16,6 +16,23 @@ body {
   height: 100%;
 }
 
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 20px;
+}
+
+/* .content {
+  margin: auto;
+  text-align: center;
+} */
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
