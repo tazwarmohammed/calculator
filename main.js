@@ -29,7 +29,6 @@ const domIds = {
 let number1; 
 let number2; 
 let operator;
-// let result;
 let operatorCount = 0;
 let isOperator = false;   //true if any operator is pressed
 let isEqual = false;   //true if equal button is pressed
@@ -56,19 +55,21 @@ function operate(num1, num2, operator) {
         return add(num1, num2);
     } else if(operator == '-') {
         return subtract(num1, num2);
-    } else if(operator == '×') {
+    } else if(operator == '×' || operator == '*') {
         return multiply(num1, num2);
-    } else if(operator == '÷') {
+    } else if(operator == '÷' || operator == '/') {
         return divide(num1, num2);
     }
 }
 
 //remove everything from display
 function allClear() {                
-    number1 = undefined
+    number1 = undefined;
     number2 = undefined;
-    operator, display.innerText = '';
-    isOperator, isEqual = false;
+    operator = undefined;
+    display.innerText = '';
+    isOperator = false;
+    isEqual = false;
     operatorCount = 0;
 }
 
@@ -81,19 +82,20 @@ function clearAllOperatorColor() {
 
 function displayResult() {
     let result = operate(number1, number2, operator);
-    if(result == NaN || result == Infinity || result == undefined) {
+    // console.log(result);
+    // console.log(typeof result);
+    if(isNaN(result) || result === Infinity || result === undefined) {
         display.innerText = 'Math Error';
     } else {
         number2 = Number(display.innerText);
         result = operate(number1, number2, operator);
+        // console.log(result);
         if(result.toString().length > 11) {
             display.innerText = result.toPrecision(11);
         } else {
             display.innerText = result;
         }
     }
-    console.log(result);
-    console.log(result.toString().length);
 }
 
 function disableButtons() {
@@ -113,14 +115,15 @@ function enableButtons() {
 }
 
 function buttonAction(e, isClick) {
+    let currentButton;
     if(isClick) {
-        const currentButton = e.target;
+        currentButton = e.target;
         currentButton.style.cssText = `background-color: white`;
         setTimeout(() => {
             currentButton.style.removeProperty("background-color");
         }, 10);
     } else {
-        const currentButton = document.getElementById(domIds[e.key]);
+        currentButton = document.getElementById(domIds[e.key]);
         currentButton.style.cssText = `background-color: white`;
         setTimeout(() => {
             currentButton.style.removeProperty("background-color");
@@ -130,11 +133,12 @@ function buttonAction(e, isClick) {
 }
 
 function numberInput(e, isClick) {
+    if(isOperator) {
+        display.innerText = '';
+        isOperator = false;
+    }
+
     if(display.innerText.length<12) {
-        if(isOperator) {
-            display.innerText = '';
-            isOperator = false;
-        }
         if(isClick) {
             display.innerText += e.target.innerText;
         } else {
@@ -168,7 +172,7 @@ function equalAction() {
     if(!isEqual) {
         operatorCount = 0;
         displayResult();
-        isOperator = true; 
+        isOperator = true;
         isEqual = true;
     }
 }
@@ -193,7 +197,6 @@ document.querySelector('#on-off').addEventListener('click', (e) => {
         e.target.innerText = 'ON';
         display.innerText = 'Calculator off!';
         disableButtons();
-
     } else {
         e.target.innerText = 'OFF';
         display.innerText = '';
@@ -225,7 +228,7 @@ document.querySelectorAll('.num').forEach((number) => {
 //operator buttons
 operatorDom.forEach((op) => {
     op.addEventListener('click', (e) => {
-        operatorInput(e, op, true);
+        operatorInput(e, true);
     });
 });
 
