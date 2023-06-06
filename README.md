@@ -3,4 +3,4 @@ A calculator with basic mathematical operations and flexible display using HTML,
 
 The flexible display allows users to produce results having massive significant numbers, by enlarging the display according to the length of the result.
 
-Live link: https://tazwarmohammed.github.io/calculator/
+Live link: https://tazwarmohammed.github.io/flexible-calculator/
